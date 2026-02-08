@@ -1,9 +1,14 @@
+# Maven
 target/
-*.class
-.vscode/
+
+# IDEs
 .idea/
 *.iml
-*.db
+.vscode/
 .settings/
 .classpath
 .project
+
+# OS
+.DS_Store
+thumbs.db
