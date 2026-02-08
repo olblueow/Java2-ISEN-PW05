@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import fr.isen.java2.db.entities.Genre;
 import fr.isen.java2.db.entities.Movie;
@@ -65,7 +66,7 @@ public class MovieDao {
 		}
 	}
 
-	public Movie addMovie(Movie movie) {
+	public Optional<Movie> addMovie(Movie movie) {
 		try(Connection connection = DataSourceFactory.getConnection()) {
 			String sqlQuery = "INSERT INTO movie(title,release_date,genre_id,duration,director,summary) VALUES(?,?,?,?,?,?)";
 			try (PreparedStatement statement = connection.prepareStatement(sqlQuery,Statement.RETURN_GENERATED_KEYS)){
@@ -78,13 +79,13 @@ public class MovieDao {
 				statement.executeUpdate();
 				ResultSet ids = statement.getGeneratedKeys();
 					if (ids.next()) {
-						return new Movie(ids.getInt(1), movie.getTitle(), movie.getReleaseDate(), movie.getGenre(), movie.getDuration(), movie.getDirector(), movie.getSummary());
+						return Optional.of(new Movie(ids.getInt(1), movie.getTitle(), movie.getReleaseDate(), movie.getGenre(), movie.getDuration(), movie.getDirector(), movie.getSummary()));
 					}
 			}
 		}catch (Exception e) {
 			// Manage exception
 			throw new RuntimeException("Error while adding a movie", e);
 		}
-		return null;
+		return Optional.empty();
 	}	
 }

@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,18 +46,18 @@ public class GenreDaoTestCase {
 	@Test
 	public void shouldGetGenreByName() {
 		// WHEN
-		Genre genre = genreDao.getGenre("Comedy");
+		Optional<Genre> genre = genreDao.getGenre("Comedy");
 		// THEN
-		assertThat(genre.getId()).isEqualTo(2);
-		assertThat(genre.getName()).isEqualTo("Comedy");
+		assertThat(genre.get().getId()).isEqualTo(2);
+		assertThat(genre.get().getName()).isEqualTo("Comedy");
 	}
 	
 	@Test
 	public void shouldNotGetUnknownGenre() {
 		// WHEN
-		Genre genre = genreDao.getGenre("Unknown");
+		Optional<Genre> genre = genreDao.getGenre("Unknown");
 		// THEN
-		assertThat(genre).isNull();
+		assertThat(genre).isEmpty();
 	}
 	
 	@Test

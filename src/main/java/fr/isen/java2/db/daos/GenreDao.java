@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import fr.isen.java2.db.entities.Genre;
 
@@ -32,25 +33,24 @@ public class GenreDao {
 		}
 	}
 
-	public Genre getGenre(String name) {
+	public Optional<Genre> getGenre(String name) {
 		try (Connection connection = DataSourceFactory.getConnection()) {
 			try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM genre WHERE name = ?")) {
 				statement.setString(1, name);
 				try (ResultSet results = statement.executeQuery()) {
 					if (results.next()){
-						return new Genre(
+						return Optional.of(new Genre(
 							results.getInt("idgenre"), 
-							results.getString("name"));
-					} else {
-						return null;
-					}
+							results.getString("name")));
+					} 
 				}
 			}
 		} catch (Exception e) {
 			// Manage exception 
 			throw new RuntimeException("Error while getting genre", e);
 		}
-	}
+		return Optional.empty();
+	}	
 
 	public void addGenre(String name) {
 		try (Connection connection = DataSourceFactory.getConnection()) {
